@@ -21,31 +21,45 @@ class PremiumBanner extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF2A2118), Color(0xFF1E1815)],
+              colors: [Color(0xFFFFF3E6), Color(0xFFFFE8D6)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
             border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.15),
+              color: AppColors.primary.withValues(alpha: 0.2),
               width: 0.5,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(
             children: [
-              // Icon
+              // Icon with gradient bg
               Container(
-                width: 44,
-                height: 44,
+                width: 46,
+                height: 46,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.15),
+                  gradient: AppColors.premiumGradient,
                   borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.25),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
                 child: const Center(
                   child: Icon(
                     Icons.workspace_premium_rounded,
-                    color: AppColors.primary,
+                    color: Colors.white,
                     size: 22,
                   ),
                 ),
@@ -66,7 +80,7 @@ class PremiumBanner extends StatelessWidget {
                     Text(
                       'Unlimited designs & premium features',
                       style: AppTypography.bodySmall.copyWith(
-                        color: AppColors.textTertiary,
+                        color: AppColors.textSecondary,
                         fontSize: 11,
                       ),
                     ),
@@ -74,10 +88,20 @@ class PremiumBanner extends StatelessWidget {
                 ),
               ),
               // Arrow
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 14,
-                color: AppColors.textTertiary,
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 14,
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
             ],
           ),

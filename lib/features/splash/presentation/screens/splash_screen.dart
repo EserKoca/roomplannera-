@@ -42,17 +42,17 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: AppColors.bgPrimary,
       body: Stack(
         children: [
-          // Subtle warm radial glow behind logo
+          // Warm colorful radial glow behind logo
           Center(
             child: Container(
-              width: 300,
-              height: 300,
+              width: 320,
+              height: 320,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.primary.withValues(alpha: 0.08),
-                    AppColors.primary.withValues(alpha: 0.02),
+                    AppColors.primary.withValues(alpha: 0.12),
+                    AppColors.accent.withValues(alpha: 0.06),
                     Colors.transparent,
                   ],
                   stops: const [0.0, 0.5, 1.0],
@@ -69,30 +69,49 @@ class _SplashScreenState extends State<SplashScreen> {
                 curve: Curves.easeOutCubic,
               ),
 
+          // Second decorative orb
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.15,
+            right: -50,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.energyYellow.withValues(alpha: 0.1),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ).animate().fadeIn(duration: 1500.ms, delay: 400.ms),
+
           // Logo content
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // App icon
+                // App icon - colorful gradient
                 Container(
-                  width: 72,
-                  height: 72,
+                  width: 80,
+                  height: 80,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(22),
                     gradient: AppColors.premiumGradient,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.3),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
+                        color: AppColors.primary.withValues(alpha: 0.35),
+                        blurRadius: 28,
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
                   child: const Center(
                     child: Icon(
                       Icons.auto_awesome_rounded,
-                      size: 36,
+                      size: 40,
                       color: Colors.white,
                     ),
                   ),
@@ -106,19 +125,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       curve: Curves.easeOutBack,
                     ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
 
                 // App name
-                ShaderMask(
-                  shaderCallback: (bounds) =>
-                      AppColors.premiumGradient.createShader(bounds),
-                  child: Text(
-                    'RoomAI',
-                    style: AppTypography.h1.copyWith(
-                      fontSize: 40,
-                      color: Colors.white,
-                      letterSpacing: -1,
-                    ),
+                Text(
+                  'RoomAI',
+                  style: AppTypography.h1.copyWith(
+                    fontSize: 42,
+                    color: AppColors.textPrimary,
+                    letterSpacing: -1,
                   ),
                 )
                     .animate()
@@ -130,11 +145,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       curve: Curves.easeOutCubic,
                     ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
 
                 // Tagline
                 Text(
-                  'Design Your Space',
+                  'Design Your Dream Space',
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.textTertiary,
                     letterSpacing: 2,

@@ -8,22 +8,22 @@ import '../constants/app_spacing.dart';
 class AppTheme {
   AppTheme._();
 
-  static ThemeData darkTheme() {
+  static ThemeData lightTheme() {
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
+      brightness: Brightness.light,
       scaffoldBackgroundColor: AppColors.bgPrimary,
-      colorScheme: const ColorScheme.dark(
+      colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
-        primaryContainer: AppColors.primaryDark,
+        primaryContainer: AppColors.primaryLight,
         secondary: AppColors.accent,
-        secondaryContainer: AppColors.accentDark,
+        secondaryContainer: AppColors.accentLight,
         surface: AppColors.bgSecondary,
         error: AppColors.error,
-        onPrimary: AppColors.textPrimary,
-        onSecondary: AppColors.bgPrimary,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
         onSurface: AppColors.textPrimary,
-        onError: AppColors.textPrimary,
+        onError: Colors.white,
         outline: AppColors.surfaceBorder,
       ),
       textTheme: TextTheme(
@@ -40,7 +40,7 @@ class AppTheme {
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
         titleTextStyle: AppTypography.h3,
       ),
@@ -61,7 +61,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.textPrimary,
+          foregroundColor: Colors.white,
           textStyle: AppTypography.buttonText,
           minimumSize: const Size(double.infinity, AppSpacing.buttonHeight),
           shape: RoundedRectangleBorder(
@@ -72,7 +72,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.bgCard,
+        fillColor: AppColors.bgTertiary,
         hintStyle: const TextStyle(color: AppColors.textTertiary),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -96,8 +96,8 @@ class AppTheme {
         thickness: 0.5,
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: AppColors.bgSecondary,
-        contentTextStyle: AppTypography.bodyMedium,
+        backgroundColor: AppColors.textPrimary,
+        contentTextStyle: AppTypography.bodyMedium.copyWith(color: Colors.white),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -105,4 +105,7 @@ class AppTheme {
       ),
     );
   }
+
+  // Keep darkTheme for backward compatibility but redirect to light
+  static ThemeData darkTheme() => lightTheme();
 }

@@ -16,7 +16,7 @@ class RoomAIApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'RoomAI',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme(),
+      theme: AppTheme.lightTheme(),
       routerConfig: router,
       localizationsDelegates: const [
         AppLocalizations.delegate,

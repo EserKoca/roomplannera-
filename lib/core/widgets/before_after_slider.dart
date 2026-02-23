@@ -110,12 +110,12 @@ class _BeforeAfterSliderState extends State<BeforeAfterSlider> {
                       children: [
                         Icon(
                           Icons.arrow_left,
-                          color: AppColors.bgPrimary,
+                          color: AppColors.textPrimary,
                           size: 20,
                         ),
                         Icon(
                           Icons.arrow_right,
-                          color: AppColors.bgPrimary,
+                          color: AppColors.textPrimary,
                           size: 20,
                         ),
                       ],

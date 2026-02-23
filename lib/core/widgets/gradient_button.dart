@@ -31,14 +31,17 @@ class GradientButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: isEnabled
             ? (gradient ?? AppColors.premiumGradient)
-            : const LinearGradient(
-                colors: [Color(0xFF2A2825), Color(0xFF1E1D1B)],
+            : LinearGradient(
+                colors: [
+                  AppColors.warmGray,
+                  AppColors.warmGrayLight,
+                ],
               ),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         boxShadow: isEnabled
             ? [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.25),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                   blurRadius: 16,
                   offset: const Offset(0, 6),
                 ),
@@ -56,16 +59,14 @@ class GradientButton extends StatelessWidget {
                     width: 22,
                     height: 22,
                     child: CircularProgressIndicator(
-                      color: AppColors.textPrimary,
+                      color: Colors.white,
                       strokeWidth: 2,
                     ),
                   )
                 : Text(
                     text,
                     style: AppTypography.buttonText.copyWith(
-                      color: isEnabled
-                          ? AppColors.textPrimary
-                          : AppColors.textTertiary,
+                      color: isEnabled ? Colors.white : AppColors.textTertiary,
                     ),
                   ),
           ),

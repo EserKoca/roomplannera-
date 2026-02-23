@@ -82,7 +82,6 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to share: $e'),
-            backgroundColor: AppColors.bgSecondary,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -110,7 +109,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: AppSpacing.md),
                 decoration: BoxDecoration(
-                  color: AppColors.textTertiary,
+                  color: AppColors.warmGray,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -276,10 +275,10 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.photo_library_rounded,
               size: 64,
-              color: AppColors.textTertiary,
+              color: AppColors.warmGray,
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
@@ -323,95 +322,109 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
     return GestureDetector(
       onTap: () => _openDesign(design),
       onLongPress: () => _showOptionsSheet(design),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Image or placeholder
-            if (design.generatedImagePath.isNotEmpty && fileExists)
-              Image.file(
-                generatedFile,
-                fit: BoxFit.cover,
-                height: 200,
-              )
-            else
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: AppColors.cardGradient,
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.palette_rounded,
-                    size: 40,
-                    color: AppColors.textTertiary,
-                  ),
-                ),
-              ),
-
-            // Bottom gradient overlay
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.7),
-                    ],
-                    stops: const [0.5, 1.0],
-                  ),
-                ),
-              ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
-
-            // Style name + room type bottom-left
-            Positioned(
-              bottom: AppSpacing.sm,
-              left: AppSpacing.sm,
-              right: 36,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    design.styleName,
-                    style: AppTypography.labelMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Image or placeholder
+              if (design.generatedImagePath.isNotEmpty && fileExists)
+                Image.file(
+                  generatedFile,
+                  fit: BoxFit.cover,
+                  height: 200,
+                )
+              else
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: AppColors.cardGradient,
                   ),
-                  if (design.roomTypeName.isNotEmpty)
+                  child: Center(
+                    child: Icon(
+                      Icons.palette_rounded,
+                      size: 40,
+                      color: AppColors.warmGray,
+                    ),
+                  ),
+                ),
+
+              // Bottom gradient overlay
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.6),
+                      ],
+                      stops: const [0.5, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Style name + room type bottom-left
+              Positioned(
+                bottom: AppSpacing.sm,
+                left: AppSpacing.sm,
+                right: 36,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Text(
-                      design.roomTypeName,
-                      style: AppTypography.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 10,
+                      design.styleName,
+                      style: AppTypography.labelMedium.copyWith(
+                        color: Colors.white,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                ],
-              ),
-            ),
-
-            // Favorite icon top-right
-            Positioned(
-              top: AppSpacing.sm,
-              right: AppSpacing.sm,
-              child: GestureDetector(
-                onTap: () => _toggleFavorite(design.id),
-                child: Icon(
-                  design.isFavorite
-                      ? Icons.favorite_rounded
-                      : Icons.favorite_border_rounded,
-                  color:
-                      design.isFavorite ? Colors.red : Colors.white70,
-                  size: 22,
+                    if (design.roomTypeName.isNotEmpty)
+                      Text(
+                        design.roomTypeName,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: Colors.white70,
+                          fontSize: 10,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
                 ),
               ),
-            ),
-          ],
+
+              // Favorite icon top-right
+              Positioned(
+                top: AppSpacing.sm,
+                right: AppSpacing.sm,
+                child: GestureDetector(
+                  onTap: () => _toggleFavorite(design.id),
+                  child: Icon(
+                    design.isFavorite
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    color:
+                        design.isFavorite ? Colors.red : Colors.white70,
+                    size: 22,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     )
@@ -453,13 +466,13 @@ class _FilterChip extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withValues(alpha: 0.2)
-              : AppColors.surfaceGlass,
+              ? AppColors.primary.withValues(alpha: 0.12)
+              : AppColors.bgSecondary,
           borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
           border: Border.all(
             color: isSelected
                 ? AppColors.primary
-                : AppColors.surfaceBorder,
+                : AppColors.warmGray.withValues(alpha: 0.4),
           ),
         ),
         child: Text(

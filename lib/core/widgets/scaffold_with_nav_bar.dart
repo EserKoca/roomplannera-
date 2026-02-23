@@ -42,7 +42,7 @@ class _LiquidGlassNavBar extends StatelessWidget {
   });
 
   static const _items = [
-    _NavItem(icon: Icons.home_rounded, activeIcon: Icons.home_rounded, label: 'Home'),
+    _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Home'),
     _NavItem(icon: Icons.photo_library_outlined, activeIcon: Icons.photo_library_rounded, label: 'Gallery'),
     _NavItem(icon: Icons.settings_outlined, activeIcon: Icons.settings_rounded, label: 'Settings'),
   ];
@@ -58,20 +58,20 @@ class _LiquidGlassNavBar extends StatelessWidget {
           child: Container(
             height: 68,
             decoration: BoxDecoration(
-              color: AppColors.bgSecondary.withValues(alpha: 0.65),
+              color: Colors.white.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(28),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.08),
+                color: AppColors.warmGray.withValues(alpha: 0.3),
                 width: 0.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.25),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 30,
                   offset: const Offset(0, 10),
                 ),
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.05),
+                  color: AppColors.primary.withValues(alpha: 0.04),
                   blurRadius: 40,
                   spreadRadius: -5,
                 ),
@@ -134,7 +134,7 @@ class _LiquidNavItem extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isActive
-              ? AppColors.primary.withValues(alpha: 0.15)
+              ? AppColors.primary.withValues(alpha: 0.12)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),

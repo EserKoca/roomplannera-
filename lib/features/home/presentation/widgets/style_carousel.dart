@@ -36,7 +36,7 @@ class StyleCarousel extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    // Background gradient
+                    // Background gradient - brighter
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -52,7 +52,7 @@ class StyleCarousel extends StatelessWidget {
                       child: Icon(
                         Icons.palette_rounded,
                         size: 36,
-                        color: Colors.white.withValues(alpha: 0.15),
+                        color: Colors.white.withValues(alpha: 0.2),
                       ),
                     ),
 
@@ -65,7 +65,7 @@ class StyleCarousel extends StatelessWidget {
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.black.withValues(alpha: 0.65),
+                              Colors.black.withValues(alpha: 0.55),
                             ],
                             stops: const [0.45, 1.0],
                           ),
@@ -89,7 +89,7 @@ class StyleCarousel extends StatelessWidget {
                       ),
                     ),
 
-                    // PRO badge
+                    // PRO badge - vibrant
                     if (style.isPremium)
                       Positioned(
                         top: 8,
@@ -100,17 +100,13 @@ class StyleCarousel extends StatelessWidget {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.5),
+                            gradient: AppColors.premiumGradient,
                             borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: AppColors.primary.withValues(alpha: 0.4),
-                              width: 0.5,
-                            ),
                           ),
                           child: Text(
                             'PRO',
                             style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.primaryLight,
+                              color: Colors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 9,
                               letterSpacing: 0.5,

@@ -12,7 +12,6 @@ import 'package:room_ai/core/constants/app_spacing.dart';
 import 'package:room_ai/core/constants/app_typography.dart';
 import 'package:room_ai/core/router/app_router.dart';
 import 'package:room_ai/core/widgets/before_after_slider.dart';
-import 'package:room_ai/core/widgets/glass_card.dart';
 import 'package:room_ai/core/widgets/gradient_button.dart';
 import 'package:room_ai/features/design/data/repositories/design_repository.dart';
 import 'package:room_ai/features/design/providers/design_provider.dart';
@@ -74,7 +73,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to save: $e'),
-            backgroundColor: AppColors.bgCard,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -97,7 +95,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to share: $e'),
-            backgroundColor: AppColors.bgCard,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -146,6 +143,13 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
                 child: hasOriginal && hasGenerated
                     ? BeforeAfterSlider(
@@ -172,11 +176,18 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
             // ── Bottom action panel ──────────────────────────────────
             Container(
               padding: const EdgeInsets.all(AppSpacing.md),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: AppColors.bgSecondary,
-                borderRadius: BorderRadius.vertical(
+                borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(AppSpacing.radiusXl),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 20,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
@@ -191,16 +202,17 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                             vertical: AppSpacing.xs,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.bgCard,
+                            color: AppColors.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusFull),
                             border: Border.all(
-                                color: AppColors.surfaceBorder),
+                                color: AppColors.primary.withValues(alpha: 0.2)),
                           ),
                           child: Text(
                             styleName,
                             style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.primaryLight,
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -212,16 +224,17 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                             vertical: AppSpacing.xs,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.bgCard,
+                            color: AppColors.accent.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusFull),
                             border: Border.all(
-                                color: AppColors.surfaceBorder),
+                                color: AppColors.accent.withValues(alpha: 0.2)),
                           ),
                           child: Text(
                             roomTypeName,
                             style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.primaryLight,
+                              color: AppColors.accent,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -289,8 +302,8 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         gradient: LinearGradient(
           colors: [
-            gradientColors.first.withValues(alpha: 0.8),
-            gradientColors.last.withValues(alpha: 0.6),
+            gradientColors.first.withValues(alpha: 0.3),
+            gradientColors.last.withValues(alpha: 0.2),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -348,9 +361,16 @@ class _ActionButton extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GlassCard(
+          Container(
             padding: const EdgeInsets.all(12),
-            borderRadius: AppSpacing.radiusMd,
+            decoration: BoxDecoration(
+              color: AppColors.bgTertiary,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              border: Border.all(
+                color: AppColors.warmGray.withValues(alpha: 0.3),
+                width: 0.5,
+              ),
+            ),
             child: Icon(
               icon,
               color: iconColor ?? AppColors.textPrimary,

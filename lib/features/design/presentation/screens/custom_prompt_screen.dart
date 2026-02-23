@@ -267,7 +267,7 @@ class _CustomPromptScreenState extends ConsumerState<CustomPromptScreen> {
                             text,
                             style: AppTypography.bodySmall.copyWith(
                               color: isSelected
-                                  ? AppColors.textPrimary
+                                  ? Colors.white
                                   : AppColors.textSecondary,
                             ),
                           ),

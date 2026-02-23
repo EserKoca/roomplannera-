@@ -11,16 +11,16 @@ import 'package:room_ai/features/design/data/models/room_type.dart';
 class RoomTypeGrid extends StatelessWidget {
   const RoomTypeGrid({super.key});
 
-  // Map room type IDs to warm, relevant colors
+  // Map room type IDs to bright, inviting colors
   static const Map<String, Color> _roomColors = {
     'living_room': AppColors.primary,
     'bedroom': Color(0xFFB08DAB),
-    'kitchen': Color(0xFFE8A87C),
-    'bathroom': Color(0xFF7EC8C8),
-    'garden': AppColors.accent,
-    'office': Color(0xFF9BA4B4),
-    'kids_room': Color(0xFFE8C067),
-    'dining_room': Color(0xFFD4845A),
+    'kitchen': Color(0xFFFF9F43),
+    'bathroom': AppColors.accent,
+    'garden': Color(0xFF6BCB77),
+    'office': Color(0xFF6C9BCF),
+    'kids_room': Color(0xFFFFD166),
+    'dining_room': Color(0xFFE8845A),
   };
 
   @override
@@ -47,19 +47,26 @@ class RoomTypeGrid extends StatelessWidget {
             onTap: () => context.push(RoutePaths.styleSelection),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.surfaceGlass,
+                color: AppColors.bgSecondary,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 border: Border.all(
-                  color: AppColors.surfaceBorder,
+                  color: AppColors.warmGray.withValues(alpha: 0.35),
                   width: 0.5,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 38,
-                    height: 38,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(12),

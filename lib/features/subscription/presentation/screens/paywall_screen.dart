@@ -156,7 +156,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Subscription coming soon'),
-                          backgroundColor: AppColors.bgSecondary,
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
@@ -182,7 +181,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Restore purchases coming soon'),
-                          backgroundColor: AppColors.bgSecondary,
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
@@ -318,7 +316,7 @@ class _PlanCard extends StatelessWidget {
                 child: Text(
                   badgeText!,
                   style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.bgPrimary,
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: 10,
                   ),

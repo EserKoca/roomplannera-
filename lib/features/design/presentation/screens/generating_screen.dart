@@ -251,7 +251,7 @@ class _GeneratingScreenState extends ConsumerState<GeneratingScreen>
                         // Background track
                         Container(
                           decoration: BoxDecoration(
-                            color: AppColors.bgCard,
+                            color: AppColors.warmGray,
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -343,7 +343,7 @@ class _GeneratingScreenState extends ConsumerState<GeneratingScreen>
                         children: [
                           const Icon(
                             Icons.lightbulb_outline_rounded,
-                            color: AppColors.accent,
+                            color: AppColors.energyYellow,
                             size: 20,
                           ),
                           const SizedBox(width: AppSpacing.sm),

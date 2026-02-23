@@ -62,8 +62,8 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                             decoration: BoxDecoration(
                               color: isPremium
-                                  ? AppColors.primary.withValues(alpha: 0.2)
-                                  : AppColors.textTertiary.withValues(alpha: 0.2),
+                                  ? AppColors.primary.withValues(alpha: 0.12)
+                                  : AppColors.warmGray.withValues(alpha: 0.5),
                               borderRadius:
                                   BorderRadius.circular(AppSpacing.radiusSm),
                             ),
@@ -124,14 +124,14 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                         const _Divider(),
                         _SettingsRow(
-                          icon: Icons.dark_mode_rounded,
-                          iconColor: AppColors.primaryLight,
+                          icon: Icons.light_mode_rounded,
+                          iconColor: AppColors.energyYellow,
                           label: 'Theme',
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Dark',
+                                'Light',
                                 style: AppTypography.bodyMedium.copyWith(
                                   color: AppColors.textSecondary,
                                 ),
@@ -143,15 +143,14 @@ class SettingsScreen extends ConsumerWidget {
                                   vertical: AppSpacing.xs,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.textTertiary
-                                      .withValues(alpha: 0.2),
+                                  color: AppColors.accent.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(
                                       AppSpacing.radiusSm),
                                 ),
                                 child: Text(
-                                  'Coming soon',
+                                  'Active',
                                   style: AppTypography.bodySmall.copyWith(
-                                    color: AppColors.textTertiary,
+                                    color: AppColors.accent,
                                     fontSize: 10,
                                   ),
                                 ),
@@ -172,7 +171,7 @@ class SettingsScreen extends ConsumerWidget {
                       children: [
                         _SettingsRow(
                           icon: Icons.star_rounded,
-                          iconColor: AppColors.accent,
+                          iconColor: AppColors.energyYellow,
                           label: 'Rate Us',
                           trailing: const Icon(
                             Icons.chevron_right_rounded,
@@ -182,7 +181,6 @@ class SettingsScreen extends ConsumerWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('App Store rating coming soon'),
-                                backgroundColor: AppColors.bgSecondary,
                                 behavior: SnackBarBehavior.floating,
                               ),
                             );
@@ -201,7 +199,6 @@ class SettingsScreen extends ConsumerWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Contact support coming soon'),
-                                backgroundColor: AppColors.bgSecondary,
                                 behavior: SnackBarBehavior.floating,
                               ),
                             );
@@ -265,7 +262,6 @@ class SettingsScreen extends ConsumerWidget {
                               const SnackBar(
                                 content:
                                     Text('Restore purchases coming soon'),
-                                backgroundColor: AppColors.bgSecondary,
                                 behavior: SnackBarBehavior.floating,
                               ),
                             );
@@ -329,7 +325,6 @@ class SettingsScreen extends ConsumerWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Gallery cleared'),
-                    backgroundColor: AppColors.bgSecondary,
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
@@ -413,7 +408,7 @@ class _Divider extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
       child: Divider(
-        color: AppColors.surfaceBorder,
+        color: AppColors.warmGray.withValues(alpha: 0.4),
         height: 1,
       ),
     );
@@ -459,7 +454,6 @@ class _ApiKeySectionState extends ConsumerState<_ApiKeySection> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('API key cleared'),
-          backgroundColor: AppColors.bgSecondary,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -489,16 +483,15 @@ class _ApiKeySectionState extends ConsumerState<_ApiKeySection> {
         });
         FocusScope.of(context).unfocus();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Row(
               children: [
                 Icon(Icons.check_circle_rounded,
                     color: AppColors.success, size: 20),
-                SizedBox(width: 8),
-                Text('API key verified and saved'),
+                const SizedBox(width: 8),
+                const Text('API key verified and saved'),
               ],
             ),
-            backgroundColor: AppColors.bgSecondary,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -524,7 +517,6 @@ class _ApiKeySectionState extends ConsumerState<_ApiKeySection> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Key saved but could not validate (network error)'),
-          backgroundColor: AppColors.bgSecondary,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -563,7 +555,7 @@ class _ApiKeySectionState extends ConsumerState<_ApiKeySection> {
                 color: AppColors.textTertiary,
               ),
               filled: true,
-              fillColor: AppColors.bgPrimary.withValues(alpha: 0.5),
+              fillColor: AppColors.bgTertiary,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.md,
                 vertical: AppSpacing.sm,
@@ -629,7 +621,7 @@ class _ApiKeySectionState extends ConsumerState<_ApiKeySection> {
       case _ValidationState.networkError:
         return AppColors.accent;
       case _ValidationState.none:
-        return AppColors.surfaceBorder;
+        return AppColors.warmGray.withValues(alpha: 0.4);
     }
   }
 
@@ -700,15 +692,15 @@ class _LanguageToggleState extends State<_LanguageToggle> {
           vertical: AppSpacing.xs,
         ),
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.15),
+          color: AppColors.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
           border:
-              Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+              Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
         ),
         child: Text(
           _currentLanguage == 'en' ? 'English' : 'Turkce',
           style: AppTypography.labelMedium.copyWith(
-            color: AppColors.primaryLight,
+            color: AppColors.primary,
           ),
         ),
       ),

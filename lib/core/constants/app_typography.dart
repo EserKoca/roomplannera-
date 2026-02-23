@@ -76,6 +76,6 @@ abstract class AppTypography {
     fontSize: 16,
     fontWeight: FontWeight.w700,
     letterSpacing: 0.5,
-    color: AppColors.textPrimary,
+    color: Colors.white,
   );
 }

@@ -69,7 +69,7 @@ class _StyleSelectionScreenState extends ConsumerState<StyleSelectionScreen> {
                         ? l10n.roomDesign
                         : l10n.gardenDesign,
                     style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.textPrimary,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -98,7 +98,6 @@ class _StyleSelectionScreenState extends ConsumerState<StyleSelectionScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(l10n.upgradeToUnlock),
-                          backgroundColor: AppColors.bgCard,
                           behavior: SnackBarBehavior.floating,
                           shape: RoundedRectangleBorder(
                             borderRadius:
@@ -177,7 +176,9 @@ class _StyleSelectionScreenState extends ConsumerState<StyleSelectionScreen> {
                             right: 12,
                             child: Text(
                               style.nameTr,
-                              style: AppTypography.labelLarge,
+                              style: AppTypography.labelLarge.copyWith(
+                                color: Colors.white,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -201,7 +202,7 @@ class _StyleSelectionScreenState extends ConsumerState<StyleSelectionScreen> {
                                 child: Text(
                                   l10n.proStyle,
                                   style: AppTypography.labelMedium.copyWith(
-                                    color: AppColors.bgPrimary,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 10,
                                   ),

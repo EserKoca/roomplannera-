@@ -30,7 +30,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/modern.jpg',
       isPremium: false,
       promptKeyword: 'modern contemporary clean lines',
-      gradientColors: [Color(0xFF4A5568), Color(0xFF2D3748)],
+      gradientColors: [Color(0xFF667EEA), Color(0xFF764BA2)],
     ),
     DesignStyle(
       id: 'minimalist',
@@ -40,7 +40,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/minimalist.jpg',
       isPremium: false,
       promptKeyword: 'minimalist simple elegant less is more',
-      gradientColors: [Color(0xFFD4C5B2), Color(0xFFB8A898)],
+      gradientColors: [Color(0xFFE8D5B7), Color(0xFFC9A98A)],
     ),
     DesignStyle(
       id: 'scandinavian',
@@ -50,7 +50,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/scandinavian.jpg',
       isPremium: false,
       promptKeyword: 'scandinavian nordic hygge warm wood white',
-      gradientColors: [Color(0xFFC8B6A6), Color(0xFFA4907C)],
+      gradientColors: [Color(0xFFF3D9B1), Color(0xFFDFBF9F)],
     ),
     DesignStyle(
       id: 'industrial',
@@ -60,7 +60,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/industrial.jpg',
       isPremium: false,
       promptKeyword: 'industrial raw brick exposed pipes metal',
-      gradientColors: [Color(0xFF5C5C5C), Color(0xFF3A3A3A)],
+      gradientColors: [Color(0xFF8E9AAF), Color(0xFF6B778D)],
     ),
     DesignStyle(
       id: 'bohemian',
@@ -70,7 +70,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/bohemian.jpg',
       isPremium: false,
       promptKeyword: 'bohemian eclectic colorful textured cozy',
-      gradientColors: [Color(0xFFD4845A), Color(0xFFE8C067)],
+      gradientColors: [Color(0xFFE8845A), Color(0xFFFFD166)],
     ),
     DesignStyle(
       id: 'classic',
@@ -80,7 +80,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/classic.jpg',
       isPremium: true,
       promptKeyword: 'classic traditional elegant timeless luxury',
-      gradientColors: [Color(0xFF8B7355), Color(0xFF6B5B45)],
+      gradientColors: [Color(0xFFD4A574), Color(0xFFB8865C)],
     ),
     DesignStyle(
       id: 'japanese',
@@ -90,7 +90,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/japanese.jpg',
       isPremium: true,
       promptKeyword: 'japanese zen minimalist wabi-sabi natural',
-      gradientColors: [Color(0xFF7C9A6E), Color(0xFF5B7A4E)],
+      gradientColors: [Color(0xFF6BCB77), Color(0xFF4ECDC4)],
     ),
     DesignStyle(
       id: 'art_deco',
@@ -100,7 +100,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/art_deco.jpg',
       isPremium: true,
       promptKeyword: 'art deco geometric glamorous gold luxury 1920s',
-      gradientColors: [Color(0xFFD4A56A), Color(0xFFB8864A)],
+      gradientColors: [Color(0xFFFFD166), Color(0xFFF4A87C)],
     ),
     DesignStyle(
       id: 'mid_century',
@@ -110,7 +110,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/mid_century.jpg',
       isPremium: true,
       promptKeyword: 'mid-century modern retro organic shapes warm',
-      gradientColors: [Color(0xFFC47B5A), Color(0xFFD4A56A)],
+      gradientColors: [Color(0xFFE8845A), Color(0xFFF4A87C)],
     ),
     DesignStyle(
       id: 'coastal',
@@ -120,7 +120,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/coastal.jpg',
       isPremium: true,
       promptKeyword: 'coastal beach nautical light blue white',
-      gradientColors: [Color(0xFF7EC8C8), Color(0xFF5BA8A8)],
+      gradientColors: [Color(0xFF87CEEB), Color(0xFF4ECDC4)],
     ),
     DesignStyle(
       id: 'rustic',
@@ -130,7 +130,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/rustic.jpg',
       isPremium: true,
       promptKeyword: 'rustic country natural wood stone warm',
-      gradientColors: [Color(0xFF9B7B5B), Color(0xFF7B5B3B)],
+      gradientColors: [Color(0xFFBE9B7B), Color(0xFF9B7B5B)],
     ),
     DesignStyle(
       id: 'tropical',
@@ -140,7 +140,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/tropical.jpg',
       isPremium: true,
       promptKeyword: 'tropical lush green palm botanical vibrant',
-      gradientColors: [Color(0xFF6B9B5A), Color(0xFF4B7B3A)],
+      gradientColors: [Color(0xFF6BCB77), Color(0xFF2EC4B6)],
     ),
     DesignStyle(
       id: 'contemporary',
@@ -150,7 +150,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/contemporary.jpg',
       isPremium: true,
       promptKeyword: 'contemporary current trendy sophisticated',
-      gradientColors: [Color(0xFF505050), Color(0xFF383838)],
+      gradientColors: [Color(0xFF8E9AAF), Color(0xFF667EEA)],
     ),
     DesignStyle(
       id: 'traditional',
@@ -160,7 +160,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/traditional.jpg',
       isPremium: true,
       promptKeyword: 'traditional ornate detailed classic furniture',
-      gradientColors: [Color(0xFF7B6B5B), Color(0xFF5B4B3B)],
+      gradientColors: [Color(0xFFD4A574), Color(0xFFB08DAB)],
     ),
     DesignStyle(
       id: 'farmhouse',
@@ -170,7 +170,7 @@ class DesignStyle {
       imagePath: 'assets/images/styles/farmhouse.jpg',
       isPremium: true,
       promptKeyword: 'farmhouse country shiplap neutral cozy',
-      gradientColors: [Color(0xFFC8BAA8), Color(0xFFA89B88)],
+      gradientColors: [Color(0xFFE8D5B7), Color(0xFFD4C5B2)],
     ),
   ];
 }

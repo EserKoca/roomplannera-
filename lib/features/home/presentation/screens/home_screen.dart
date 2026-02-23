@@ -51,16 +51,23 @@ class HomeScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Container(
-                          width: 36,
-                          height: 36,
+                          width: 38,
+                          height: 38,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                             gradient: AppColors.premiumGradient,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withValues(alpha: 0.25),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
                           child: const Center(
                             child: Icon(
                               Icons.auto_awesome_rounded,
-                              size: 18,
+                              size: 20,
                               color: Colors.white,
                             ),
                           ),
@@ -70,12 +77,13 @@ class HomeScreen extends ConsumerWidget {
                           l10n.appName,
                           style: AppTypography.h3.copyWith(
                             letterSpacing: -0.5,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                       ],
                     ),
                     const Spacer(),
-                    // Pro badge
+                    // Pro badge with gradient
                     GestureDetector(
                       onTap: () => context.push(RoutePaths.paywall),
                       child: Container(
@@ -84,27 +92,30 @@ class HomeScreen extends ConsumerWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.12),
+                          gradient: AppColors.premiumGradient,
                           borderRadius:
                               BorderRadius.circular(AppSpacing.radiusFull),
-                          border: Border.all(
-                            color: AppColors.primary.withValues(alpha: 0.2),
-                            width: 0.5,
-                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.workspace_premium_rounded,
-                              size: 16,
-                              color: AppColors.primary,
+                              size: 14,
+                              color: Colors.white,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               'PRO',
                               style: AppTypography.labelMedium.copyWith(
-                                color: AppColors.primary,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 11,
                               ),
@@ -131,7 +142,10 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     Text(
                       l10n.greeting,
-                      style: AppTypography.h1.copyWith(fontSize: 28),
+                      style: AppTypography.h1.copyWith(
+                        fontSize: 28,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
                     const SizedBox(height: 6),
                     Text(
@@ -163,6 +177,7 @@ class HomeScreen extends ConsumerWidget {
                       child: _QuickActionCard(
                         icon: Icons.weekend_rounded,
                         iconColor: AppColors.primary,
+                        bgColor: AppColors.primary.withValues(alpha: 0.1),
                         title: l10n.roomDesign,
                         subtitle: l10n.roomDesignDesc,
                         onTap: () => startDesignFlow('room'),
@@ -173,6 +188,7 @@ class HomeScreen extends ConsumerWidget {
                       child: _QuickActionCard(
                         icon: Icons.yard_rounded,
                         iconColor: AppColors.accent,
+                        bgColor: AppColors.accent.withValues(alpha: 0.1),
                         title: l10n.gardenDesign,
                         subtitle: l10n.gardenDesignDesc,
                         onTap: () => startDesignFlow('garden'),
@@ -201,6 +217,7 @@ class HomeScreen extends ConsumerWidget {
                         l10n.seeAll,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -262,6 +279,7 @@ class HomeScreen extends ConsumerWidget {
 class _QuickActionCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
+  final Color bgColor;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
@@ -269,6 +287,7 @@ class _QuickActionCard extends StatelessWidget {
   const _QuickActionCard({
     required this.icon,
     required this.iconColor,
+    required this.bgColor,
     required this.title,
     required this.subtitle,
     required this.onTap,
@@ -282,22 +301,29 @@ class _QuickActionCard extends StatelessWidget {
         height: 140,
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          color: AppColors.surfaceGlass,
+          color: AppColors.bgSecondary,
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
           border: Border.all(
-            color: AppColors.surfaceBorder,
+            color: AppColors.warmGray.withValues(alpha: 0.4),
             width: 0.5,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: 44,
-              height: 44,
+              width: 46,
+              height: 46,
               decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.12),
+                color: bgColor,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Center(

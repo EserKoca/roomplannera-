@@ -50,6 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         icon: Icons.auto_awesome_rounded,
         accentColor: AppColors.primary,
         bgDecorationColor: AppColors.primary,
+        secondaryColor: AppColors.energyYellow,
         title: l10n.onboarding1Title,
         subtitle: l10n.onboarding1Subtitle,
         featureItems: const ['Room Redesign', 'Garden Design', 'Custom AI Prompts'],
@@ -58,14 +59,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         icon: Icons.camera_enhance_rounded,
         accentColor: AppColors.accent,
         bgDecorationColor: AppColors.accent,
+        secondaryColor: AppColors.skyBlue,
         title: l10n.onboarding2Title,
         subtitle: l10n.onboarding2Subtitle,
         featureItems: const ['Snap a Photo', 'Pick a Style', 'Get Results in Seconds'],
       ),
       _OnboardingPageData(
         icon: Icons.palette_rounded,
-        accentColor: AppColors.primaryLight,
-        bgDecorationColor: AppColors.primaryLight,
+        accentColor: AppColors.lavender,
+        bgDecorationColor: AppColors.lavender,
+        secondaryColor: AppColors.softPink,
         title: l10n.onboarding3Title,
         subtitle: l10n.onboarding3Subtitle,
         featureItems: const ['15+ Design Styles', 'Before & After', 'Share Instantly'],
@@ -109,7 +112,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       end: Alignment.bottomCenter,
                       colors: [
                         AppColors.bgPrimary.withValues(alpha: 0.0),
-                        AppColors.bgPrimary.withValues(alpha: 0.85),
+                        AppColors.bgPrimary.withValues(alpha: 0.9),
                         AppColors.bgPrimary,
                       ],
                       stops: const [0.0, 0.3, 1.0],
@@ -160,7 +163,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             vertical: AppSpacing.xs + 2,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.accent.withValues(alpha: 0.12),
+                            color: AppColors.accent.withValues(alpha: 0.1),
                             borderRadius:
                                 BorderRadius.circular(AppSpacing.radiusFull),
                             border: Border.all(
@@ -195,6 +198,7 @@ class _OnboardingPageData {
   final IconData icon;
   final Color accentColor;
   final Color bgDecorationColor;
+  final Color secondaryColor;
   final String title;
   final String subtitle;
   final List<String> featureItems;
@@ -203,6 +207,7 @@ class _OnboardingPageData {
     required this.icon,
     required this.accentColor,
     required this.bgDecorationColor,
+    required this.secondaryColor,
     required this.title,
     required this.subtitle,
     required this.featureItems,
@@ -227,14 +232,14 @@ class _OnboardingPage extends StatelessWidget {
           top: -80,
           right: -60,
           child: Container(
-            width: 240,
-            height: 240,
+            width: 260,
+            height: 260,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  data.bgDecorationColor.withValues(alpha: 0.12),
-                  data.bgDecorationColor.withValues(alpha: 0.03),
+                  data.bgDecorationColor.withValues(alpha: 0.15),
+                  data.bgDecorationColor.withValues(alpha: 0.04),
                   Colors.transparent,
                 ],
               ),
@@ -260,7 +265,7 @@ class _OnboardingPage extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  data.bgDecorationColor.withValues(alpha: 0.06),
+                  data.secondaryColor.withValues(alpha: 0.1),
                   Colors.transparent,
                 ],
               ),
@@ -278,20 +283,20 @@ class _OnboardingPage extends StatelessWidget {
               children: [
                 SizedBox(height: screenSize.height * 0.08),
 
-                // Icon in a glass container
+                // Icon in a colorful circle
                 Container(
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: data.accentColor.withValues(alpha: 0.1),
+                    color: data.accentColor.withValues(alpha: 0.12),
                     border: Border.all(
-                      color: data.accentColor.withValues(alpha: 0.15),
-                      width: 1,
+                      color: data.accentColor.withValues(alpha: 0.2),
+                      width: 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: data.accentColor.withValues(alpha: 0.1),
+                        color: data.accentColor.withValues(alpha: 0.15),
                         blurRadius: 40,
                         spreadRadius: 5,
                       ),
@@ -322,6 +327,7 @@ class _OnboardingPage extends StatelessWidget {
                   style: AppTypography.h1.copyWith(
                     fontSize: 28,
                     height: 1.2,
+                    color: AppColors.textPrimary,
                   ),
                   textAlign: TextAlign.center,
                 )
@@ -356,7 +362,7 @@ class _OnboardingPage extends StatelessWidget {
 
                 SizedBox(height: screenSize.height * 0.05),
 
-                // Feature chips
+                // Feature chips - colorful pill buttons
                 Wrap(
                   spacing: AppSpacing.sm,
                   runSpacing: AppSpacing.sm,
@@ -368,10 +374,10 @@ class _OnboardingPage extends StatelessWidget {
                         vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceGlass,
+                        color: data.accentColor.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                         border: Border.all(
-                          color: AppColors.surfaceBorder,
+                          color: data.accentColor.withValues(alpha: 0.15),
                           width: 0.5,
                         ),
                       ),
