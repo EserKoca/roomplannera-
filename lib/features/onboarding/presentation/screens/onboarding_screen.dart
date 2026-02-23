@@ -1,9 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:room_ai/l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:room_ai/core/constants/app_colors.dart';
 import 'package:room_ai/core/constants/app_typography.dart';
@@ -30,8 +31,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _nextPage() {
     _pageController.nextPage(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOutCubic,
     );
   }
 
@@ -46,140 +47,170 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     final pages = [
       _OnboardingPageData(
-        icon: Icons.auto_awesome,
-        gradient: AppColors.premiumGradient,
+        icon: Icons.auto_awesome_rounded,
+        accentColor: AppColors.primary,
+        bgDecorationColor: AppColors.primary,
         title: l10n.onboarding1Title,
         subtitle: l10n.onboarding1Subtitle,
+        featureItems: const ['Room Redesign', 'Garden Design', 'Custom AI Prompts'],
       ),
       _OnboardingPageData(
-        icon: Icons.camera_alt_rounded,
-        gradient: const LinearGradient(
-          colors: [Color(0xFF00b894), Color(0xFF00cec9)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        icon: Icons.camera_enhance_rounded,
+        accentColor: AppColors.accent,
+        bgDecorationColor: AppColors.accent,
         title: l10n.onboarding2Title,
         subtitle: l10n.onboarding2Subtitle,
+        featureItems: const ['Snap a Photo', 'Pick a Style', 'Get Results in Seconds'],
       ),
       _OnboardingPageData(
-        icon: Icons.bolt_rounded,
-        gradient: AppColors.goldGradient,
+        icon: Icons.palette_rounded,
+        accentColor: AppColors.primaryLight,
+        bgDecorationColor: AppColors.primaryLight,
         title: l10n.onboarding3Title,
         subtitle: l10n.onboarding3Subtitle,
+        featureItems: const ['15+ Design Styles', 'Before & After', 'Share Instantly'],
       ),
     ];
 
     return Scaffold(
       backgroundColor: AppColors.bgPrimary,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Page View
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: pages.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return _OnboardingPage(data: pages[index]);
-                },
-              ),
-            ),
+      body: Stack(
+        children: [
+          // ── Page content ──────────────────────────────────────────
+          PageView.builder(
+            controller: _pageController,
+            itemCount: pages.length,
+            onPageChanged: (index) {
+              setState(() => _currentPage = index);
+            },
+            itemBuilder: (context, index) {
+              return _OnboardingPage(data: pages[index]);
+            },
+          ),
 
-            // Bottom Section
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                children: [
-                  // Page Indicator
-                  SmoothPageIndicator(
-                    controller: _pageController,
-                    count: pages.length,
-                    effect: ExpandingDotsEffect(
-                      activeDotColor: AppColors.primary,
-                      dotColor: AppColors.textTertiary,
-                      dotHeight: 8,
-                      dotWidth: 8,
-                      expansionFactor: 3,
+          // ── Bottom controls (overlaid) ────────────────────────────
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: ClipRRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(
+                    AppSpacing.lg,
+                    AppSpacing.lg,
+                    AppSpacing.lg,
+                    MediaQuery.of(context).padding.bottom + AppSpacing.lg,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        AppColors.bgPrimary.withValues(alpha: 0.0),
+                        AppColors.bgPrimary.withValues(alpha: 0.85),
+                        AppColors.bgPrimary,
+                      ],
+                      stops: const [0.0, 0.3, 1.0],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.lg),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Page indicator
+                      SmoothPageIndicator(
+                        controller: _pageController,
+                        count: pages.length,
+                        effect: WormEffect(
+                          activeDotColor: AppColors.primary,
+                          dotColor: AppColors.warmGray,
+                          dotHeight: 8,
+                          dotWidth: 8,
+                          spacing: 12,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
 
-                  // Buttons
-                  if (_currentPage < 2) ...[
-                    GradientButton(
-                      text: 'Next',
-                      onPressed: _nextPage,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    TextButton(
-                      onPressed: _completeOnboarding,
-                      child: Text(
-                        'Skip',
-                        style: AppTypography.bodyMedium.copyWith(
-                          color: AppColors.textSecondary,
+                      // Buttons
+                      if (_currentPage < 2) ...[
+                        GradientButton(
+                          text: 'Next',
+                          onPressed: _nextPage,
                         ),
-                      ),
-                    ),
-                  ] else ...[
-                    GradientButton(
-                      text: 'Get Started',
-                      onPressed: _completeOnboarding,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.xs,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.accent.withValues(alpha: 0.15),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusSm),
-                      ),
-                      child: Text(
-                        '3 Free Designs',
-                        style: AppTypography.labelMedium.copyWith(
-                          color: AppColors.accent,
+                        const SizedBox(height: AppSpacing.md),
+                        GestureDetector(
+                          onTap: _completeOnboarding,
+                          child: Text(
+                            'Skip',
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: AppColors.textTertiary,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: AppSpacing.sm),
-                ],
+                      ] else ...[
+                        GradientButton(
+                          text: 'Get Started',
+                          onPressed: _completeOnboarding,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.xs + 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.12),
+                            borderRadius:
+                                BorderRadius.circular(AppSpacing.radiusFull),
+                            border: Border.all(
+                              color: AppColors.accent.withValues(alpha: 0.2),
+                              width: 0.5,
+                            ),
+                          ),
+                          child: Text(
+                            '3 Free Designs Included',
+                            style: AppTypography.labelMedium.copyWith(
+                              color: AppColors.accent,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-// ---------------------------------------------------------------------------
-// Data class for onboarding page content
-// ---------------------------------------------------------------------------
+// ── Data ─────────────────────────────────────────────────────────────────────
+
 class _OnboardingPageData {
   final IconData icon;
-  final LinearGradient gradient;
+  final Color accentColor;
+  final Color bgDecorationColor;
   final String title;
   final String subtitle;
+  final List<String> featureItems;
 
   const _OnboardingPageData({
     required this.icon,
-    required this.gradient,
+    required this.accentColor,
+    required this.bgDecorationColor,
     required this.title,
     required this.subtitle,
+    required this.featureItems,
   });
 }
 
-// ---------------------------------------------------------------------------
-// Individual onboarding page widget
-// ---------------------------------------------------------------------------
+// ── Page widget ──────────────────────────────────────────────────────────────
+
 class _OnboardingPage extends StatelessWidget {
   final _OnboardingPageData data;
 
@@ -187,68 +218,198 @@ class _OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final screenSize = MediaQuery.of(context).size;
+
+    return Stack(
       children: [
-        // Top gradient area (55% of the page)
-        Expanded(
-          flex: 55,
+        // ── Background decorative orbs ───────────────────────────────
+        Positioned(
+          top: -80,
+          right: -60,
           child: Container(
-            width: double.infinity,
+            width: 240,
+            height: 240,
             decoration: BoxDecoration(
-              gradient: data.gradient,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(AppSpacing.radiusXl),
-                bottomRight: Radius.circular(AppSpacing.radiusXl),
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  data.bgDecorationColor.withValues(alpha: 0.12),
+                  data.bgDecorationColor.withValues(alpha: 0.03),
+                  Colors.transparent,
+                ],
               ),
             ),
-            child: Center(
-              child: Icon(
-                data.icon,
-                size: 120,
-                color: Colors.white.withValues(alpha: 0.9),
-              )
-                  .animate()
-                  .fadeIn(duration: 600.ms)
-                  .scale(
-                    begin: const Offset(0.5, 0.5),
-                    end: const Offset(1.0, 1.0),
-                    duration: 700.ms,
-                    curve: Curves.easeOutBack,
-                  ),
-            ),
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 1000.ms)
+              .scale(
+                begin: const Offset(0.5, 0.5),
+                end: const Offset(1.0, 1.0),
+                duration: 1200.ms,
+                curve: Curves.easeOutCubic,
+              ),
         ),
 
-        // Bottom text area (45% of the page)
-        Expanded(
-          flex: 45,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.lg,
+        Positioned(
+          bottom: screenSize.height * 0.3,
+          left: -100,
+          child: Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  data.bgDecorationColor.withValues(alpha: 0.06),
+                  Colors.transparent,
+                ],
+              ),
             ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms, delay: 300.ms),
+        ),
+
+        // ── Content ─────────────────────────────────────────────────
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(height: screenSize.height * 0.08),
+
+                // Icon in a glass container
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: data.accentColor.withValues(alpha: 0.1),
+                    border: Border.all(
+                      color: data.accentColor.withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: data.accentColor.withValues(alpha: 0.1),
+                        blurRadius: 40,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Icon(
+                      data.icon,
+                      size: 52,
+                      color: data.accentColor,
+                    ),
+                  ),
+                )
+                    .animate()
+                    .fadeIn(duration: 600.ms)
+                    .scale(
+                      begin: const Offset(0.6, 0.6),
+                      end: const Offset(1.0, 1.0),
+                      duration: 800.ms,
+                      curve: Curves.easeOutBack,
+                    ),
+
+                SizedBox(height: screenSize.height * 0.06),
+
+                // Title
                 Text(
                   data.title,
-                  style: AppTypography.h1,
+                  style: AppTypography.h1.copyWith(
+                    fontSize: 28,
+                    height: 1.2,
+                  ),
                   textAlign: TextAlign.center,
                 )
                     .animate()
                     .fadeIn(duration: 500.ms, delay: 200.ms)
-                    .slideY(begin: 0.2, end: 0, duration: 500.ms),
+                    .slideY(
+                      begin: 0.15,
+                      end: 0,
+                      duration: 500.ms,
+                      curve: Curves.easeOutCubic,
+                    ),
+
                 const SizedBox(height: AppSpacing.md),
+
+                // Subtitle
                 Text(
                   data.subtitle,
                   style: AppTypography.bodyLarge.copyWith(
                     color: AppColors.textSecondary,
+                    height: 1.5,
                   ),
                   textAlign: TextAlign.center,
                 )
                     .animate()
-                    .fadeIn(duration: 500.ms, delay: 400.ms)
-                    .slideY(begin: 0.2, end: 0, duration: 500.ms),
+                    .fadeIn(duration: 500.ms, delay: 350.ms)
+                    .slideY(
+                      begin: 0.15,
+                      end: 0,
+                      duration: 500.ms,
+                      curve: Curves.easeOutCubic,
+                    ),
+
+                SizedBox(height: screenSize.height * 0.05),
+
+                // Feature chips
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  alignment: WrapAlignment.center,
+                  children: data.featureItems.asMap().entries.map((entry) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceGlass,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                        border: Border.all(
+                          color: AppColors.surfaceBorder,
+                          width: 0.5,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.check_circle_rounded,
+                            size: 16,
+                            color: data.accentColor,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            entry.value,
+                            style: AppTypography.labelMedium.copyWith(
+                              color: AppColors.textPrimary,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                        .animate()
+                        .fadeIn(
+                          duration: 400.ms,
+                          delay: (500 + entry.key * 100).ms,
+                        )
+                        .slideY(
+                          begin: 0.2,
+                          end: 0,
+                          duration: 400.ms,
+                          delay: (500 + entry.key * 100).ms,
+                        );
+                  }).toList(),
+                ),
+
+                // Extra bottom spacing for the overlay controls
+                SizedBox(height: screenSize.height * 0.2),
               ],
             ),
           ),

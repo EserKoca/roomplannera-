@@ -12,59 +12,72 @@ class PremiumBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
       child: GestureDetector(
         onTap: () => context.push(RoutePaths.paywall),
         child: Container(
           decoration: BoxDecoration(
-            gradient: AppColors.premiumGradient,
+            gradient: const LinearGradient(
+              colors: [Color(0xFF2A2118), Color(0xFF1E1815)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            border: Border.all(
+              color: AppColors.primary.withValues(alpha: 0.15),
+              width: 0.5,
+            ),
           ),
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(
             children: [
-              const Icon(
-                Icons.workspace_premium_rounded,
-                color: AppColors.accent,
-                size: 32,
+              // Icon
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.workspace_premium_rounded,
+                    color: AppColors.primary,
+                    size: 22,
+                  ),
+                ),
               ),
               const SizedBox(width: AppSpacing.md),
+              // Text
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Unlock Unlimited',
-                      style: AppTypography.h3.copyWith(
-                        color: Colors.white,
+                      'Unlock All Styles',
+                      style: AppTypography.labelLarge.copyWith(
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: 2),
                     Text(
-                      'Get Pro for all styles & features',
+                      'Unlimited designs & premium features',
                       style: AppTypography.bodySmall.copyWith(
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: AppColors.textTertiary,
+                        fontSize: 11,
                       ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  gradient: AppColors.goldGradient,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                ),
-                child: Text(
-                  'Go Pro',
-                  style: AppTypography.buttonText.copyWith(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
+              // Arrow
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 14,
+                color: AppColors.textTertiary,
               ),
             ],
           ),

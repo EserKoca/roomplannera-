@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:room_ai/l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,7 +8,6 @@ import 'package:room_ai/core/constants/app_colors.dart';
 import 'package:room_ai/core/constants/app_spacing.dart';
 import 'package:room_ai/core/constants/app_typography.dart';
 import 'package:room_ai/core/router/app_router.dart';
-import 'package:room_ai/core/widgets/glass_card.dart';
 import 'package:room_ai/features/design/data/repositories/design_repository.dart';
 import 'package:room_ai/features/design/providers/design_provider.dart';
 import 'package:room_ai/features/home/presentation/widgets/premium_banner.dart';
@@ -38,33 +37,79 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.bgPrimary,
       body: SafeArea(
+        bottom: false,
         child: CustomScrollView(
           slivers: [
-            // ── 1. Header ──────────────────────────────────────────────
+            // ── 1. Header ────────────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg, AppSpacing.md, AppSpacing.lg, 0),
                 child: Row(
                   children: [
-                    ShaderMask(
-                      shaderCallback: (bounds) =>
-                          AppColors.premiumGradient.createShader(bounds),
-                      child: Text(
-                        l10n.appName,
-                        style:
-                            AppTypography.h2.copyWith(color: Colors.white),
-                      ),
+                    // App logo + name
+                    Row(
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: AppColors.premiumGradient,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.auto_awesome_rounded,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          l10n.appName,
+                          style: AppTypography.h3.copyWith(
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                      ],
                     ),
                     const Spacer(),
-                    IconButton(
-                      onPressed: () => context.push(RoutePaths.paywall),
-                      icon: ShaderMask(
-                        shaderCallback: (bounds) =>
-                            AppColors.goldGradient.createShader(bounds),
-                        child: const Icon(
-                          Icons.workspace_premium_rounded,
-                          color: Colors.white,
-                          size: 28,
+                    // Pro badge
+                    GestureDetector(
+                      onTap: () => context.push(RoutePaths.paywall),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.12),
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusFull),
+                          border: Border.all(
+                            color: AppColors.primary.withValues(alpha: 0.2),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.workspace_premium_rounded,
+                              size: 16,
+                              color: AppColors.primary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'PRO',
+                              style: AppTypography.labelMedium.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -72,120 +117,80 @@ class HomeScreen extends ConsumerWidget {
                 ),
               )
                   .animate()
-                  .fadeIn(delay: const Duration(milliseconds: 0))
-                  .slideY(begin: 0.05),
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: 0.03),
             ),
 
-            // ── 2. Greeting ────────────────────────────────────────────
+            // ── 2. Greeting + Remaining ──────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(l10n.greeting, style: AppTypography.h2),
-                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.greeting,
+                      style: AppTypography.h1.copyWith(fontSize: 28),
+                    ),
+                    const SizedBox(height: 6),
                     Text(
                       remaining < 0
-                          ? 'Unlimited designs (Pro)'
+                          ? 'Unlimited designs'
                           : l10n.designsRemaining(remaining),
                       style: AppTypography.bodySmall.copyWith(
                         color: remaining == 0
                             ? AppColors.error
-                            : AppColors.textSecondary,
+                            : AppColors.textTertiary,
                       ),
                     ),
                   ],
                 ),
               )
                   .animate()
-                  .fadeIn(delay: const Duration(milliseconds: 100))
-                  .slideY(begin: 0.05),
+                  .fadeIn(duration: 400.ms, delay: 80.ms)
+                  .slideY(begin: 0.03),
             ),
 
-            // ── 3. Quick Actions ───────────────────────────────────────
+            // ── 3. Quick Actions ─────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
                 child: Row(
                   children: [
                     Expanded(
-                      child: GestureDetector(
+                      child: _QuickActionCard(
+                        icon: Icons.weekend_rounded,
+                        iconColor: AppColors.primary,
+                        title: l10n.roomDesign,
+                        subtitle: l10n.roomDesignDesc,
                         onTap: () => startDesignFlow('room'),
-                        child: SizedBox(
-                          height: 140,
-                          child: GlassCard(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.weekend_rounded,
-                                  size: 40,
-                                  color: AppColors.primary,
-                                ),
-                                const SizedBox(height: AppSpacing.sm),
-                                Text(l10n.roomDesign,
-                                    style: AppTypography.labelLarge),
-                                const SizedBox(height: AppSpacing.xs),
-                                Text(
-                                  l10n.roomDesignDesc,
-                                  style: AppTypography.bodySmall.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.md),
+                    const SizedBox(width: 12),
                     Expanded(
-                      child: GestureDetector(
+                      child: _QuickActionCard(
+                        icon: Icons.yard_rounded,
+                        iconColor: AppColors.accent,
+                        title: l10n.gardenDesign,
+                        subtitle: l10n.gardenDesignDesc,
                         onTap: () => startDesignFlow('garden'),
-                        child: SizedBox(
-                          height: 140,
-                          child: GlassCard(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.yard_rounded,
-                                  size: 40,
-                                  color: Color(0xFF00b894),
-                                ),
-                                const SizedBox(height: AppSpacing.sm),
-                                Text(l10n.gardenDesign,
-                                    style: AppTypography.labelLarge),
-                                const SizedBox(height: AppSpacing.xs),
-                                Text(
-                                  l10n.gardenDesignDesc,
-                                  style: AppTypography.bodySmall.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                       ),
                     ),
                   ],
                 ),
               )
                   .animate()
-                  .fadeIn(delay: const Duration(milliseconds: 200))
-                  .slideY(begin: 0.05),
+                  .fadeIn(duration: 400.ms, delay: 160.ms)
+                  .slideY(begin: 0.03),
             ),
 
-            // ── 4. Design Styles header ────────────────────────────────
+            // ── 4. Design Styles header ──────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg, AppSpacing.xl, AppSpacing.lg, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -203,54 +208,117 @@ class HomeScreen extends ConsumerWidget {
                 ),
               )
                   .animate()
-                  .fadeIn(delay: const Duration(milliseconds: 300))
-                  .slideY(begin: 0.05),
+                  .fadeIn(duration: 400.ms, delay: 240.ms),
             ),
 
-            // ── 5. Style Carousel ──────────────────────────────────────
+            // ── 5. Style Carousel ────────────────────────────────────
             SliverToBoxAdapter(
               child: const Padding(
                 padding: EdgeInsets.only(top: AppSpacing.md),
                 child: StyleCarousel(),
               )
                   .animate()
-                  .fadeIn(delay: const Duration(milliseconds: 400))
-                  .slideY(begin: 0.05),
+                  .fadeIn(duration: 400.ms, delay: 320.ms),
             ),
 
-            // ── 6. Room Types header ───────────────────────────────────
+            // ── 6. Room Types header ─────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.md,
-                ),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg, AppSpacing.xl, AppSpacing.lg, AppSpacing.md),
                 child: Text(l10n.roomTypes, style: AppTypography.h3),
               )
                   .animate()
-                  .fadeIn(delay: const Duration(milliseconds: 500))
-                  .slideY(begin: 0.05),
+                  .fadeIn(duration: 400.ms, delay: 400.ms),
             ),
 
-            // ── 7. Room Type Grid ──────────────────────────────────────
+            // ── 7. Room Type Grid ────────────────────────────────────
             SliverToBoxAdapter(
               child: const RoomTypeGrid()
                   .animate()
-                  .fadeIn(delay: const Duration(milliseconds: 600))
-                  .slideY(begin: 0.05),
+                  .fadeIn(duration: 400.ms, delay: 480.ms),
             ),
 
-            // ── 8. Premium Banner ──────────────────────────────────────
+            // ── 8. Premium Banner ────────────────────────────────────
             SliverToBoxAdapter(
               child: const PremiumBanner()
                   .animate()
-                  .fadeIn(delay: const Duration(milliseconds: 700))
-                  .slideY(begin: 0.05),
+                  .fadeIn(duration: 400.ms, delay: 560.ms),
             ),
 
-            // ── 9. Bottom padding for nav bar ──────────────────────────
+            // ── 9. Bottom padding for liquid glass nav bar ───────────
             const SliverToBoxAdapter(
-              child: SizedBox(height: 100),
+              child: SizedBox(height: 120),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Quick action card widget ─────────────────────────────────────────────────
+
+class _QuickActionCard extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _QuickActionCard({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 140,
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceGlass,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          border: Border.all(
+            color: AppColors.surfaceBorder,
+            width: 0.5,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Center(
+                child: Icon(icon, size: 24, color: iconColor),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTypography.labelLarge),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.textTertiary,
+                    fontSize: 11,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ],
         ),

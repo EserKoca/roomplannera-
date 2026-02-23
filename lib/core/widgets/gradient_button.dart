@@ -23,21 +23,24 @@ class GradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isEnabled = onPressed != null;
+
     return Container(
       width: width ?? double.infinity,
       height: height ?? AppSpacing.buttonHeight,
       decoration: BoxDecoration(
-        gradient: onPressed != null
+        gradient: isEnabled
             ? (gradient ?? AppColors.premiumGradient)
             : const LinearGradient(
-                colors: [Color(0xFF3A3A5C), Color(0xFF2A2A4C)]),
+                colors: [Color(0xFF2A2825), Color(0xFF1E1D1B)],
+              ),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        boxShadow: onPressed != null
+        boxShadow: isEnabled
             ? [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+                  color: AppColors.primary.withValues(alpha: 0.25),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
                 ),
               ]
             : null,
@@ -50,14 +53,21 @@ class GradientButton extends StatelessWidget {
           child: Center(
             child: isLoading
                 ? const SizedBox(
-                    width: 24,
-                    height: 24,
+                    width: 22,
+                    height: 22,
                     child: CircularProgressIndicator(
                       color: AppColors.textPrimary,
-                      strokeWidth: 2.5,
+                      strokeWidth: 2,
                     ),
                   )
-                : Text(text, style: AppTypography.buttonText),
+                : Text(
+                    text,
+                    style: AppTypography.buttonText.copyWith(
+                      color: isEnabled
+                          ? AppColors.textPrimary
+                          : AppColors.textTertiary,
+                    ),
+                  ),
           ),
         ),
       ),

@@ -15,7 +15,7 @@ class StyleCarousel extends StatelessWidget {
     final styles = DesignStyle.allStyles;
 
     return SizedBox(
-      height: 180,
+      height: 170,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -26,10 +26,10 @@ class StyleCarousel extends StatelessWidget {
           return GestureDetector(
             onTap: () => context.push(RoutePaths.styleSelection),
             child: Container(
-              width: 130,
+              width: 128,
               margin: EdgeInsets.only(
-                left: index == 0 ? AppSpacing.md : 0,
-                right: 12,
+                left: index == 0 ? AppSpacing.lg : 0,
+                right: 10,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -47,12 +47,12 @@ class StyleCarousel extends StatelessWidget {
                       ),
                     ),
 
-                    // Center icon
+                    // Subtle center icon
                     Center(
                       child: Icon(
                         Icons.palette_rounded,
-                        size: 40,
-                        color: Colors.white.withValues(alpha: 0.3),
+                        size: 36,
+                        color: Colors.white.withValues(alpha: 0.15),
                       ),
                     ),
 
@@ -65,9 +65,9 @@ class StyleCarousel extends StatelessWidget {
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.black.withValues(alpha: 0.7),
+                              Colors.black.withValues(alpha: 0.65),
                             ],
-                            stops: const [0.4, 1.0],
+                            stops: const [0.45, 1.0],
                           ),
                         ),
                       ),
@@ -82,6 +82,7 @@ class StyleCarousel extends StatelessWidget {
                         style.nameTr,
                         style: AppTypography.labelMedium.copyWith(
                           color: Colors.white,
+                          fontSize: 12,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -95,21 +96,24 @@ class StyleCarousel extends StatelessWidget {
                         right: 8,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
+                            horizontal: 7,
+                            vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            gradient: AppColors.goldGradient,
-                            borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusSm,
+                            color: Colors.black.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: AppColors.primary.withValues(alpha: 0.4),
+                              width: 0.5,
                             ),
                           ),
                           child: Text(
                             'PRO',
                             style: AppTypography.bodySmall.copyWith(
-                              color: Colors.white,
+                              color: AppColors.primaryLight,
                               fontWeight: FontWeight.w700,
-                              fontSize: 10,
+                              fontSize: 9,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ),
