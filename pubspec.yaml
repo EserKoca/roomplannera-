@@ -1,0 +1,83 @@
+name: room_ai
+description: "AI-powered room design app"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State Management
+  flutter_riverpod: ^2.6.1
+
+  # Routing
+  go_router: ^14.8.1
+
+  # UI & Animation
+  google_fonts: ^6.2.1
+  flutter_animate: ^4.5.2
+  shimmer: ^3.0.0
+  flutter_staggered_grid_view: ^0.7.0
+  cached_network_image: ^3.4.1
+  smooth_page_indicator: ^1.2.0+3
+
+  # Image Handling
+  image_picker: ^1.1.2
+  image_cropper: ^8.0.2
+  photo_view: ^0.15.0
+
+  # Network
+  dio: ^5.7.0
+
+  # Local Storage
+  hive_flutter: ^1.1.0
+  path_provider: ^2.1.5
+
+  # Subscriptions
+  purchases_flutter: ^8.5.1
+
+  # Sharing
+  share_plus: ^10.1.4
+
+  # Permissions
+  permission_handler: ^11.3.1
+
+  # Utilities
+  uuid: ^4.5.1
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/images/onboarding/
+    - assets/images/styles/
+    - assets/images/room_types/
+    - assets/images/placeholders/
+    - assets/icons/
+    - assets/lottie/
+
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans/PlusJakartaSans-Regular.ttf
+        - asset: assets/fonts/PlusJakartaSans/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans/PlusJakartaSans-Bold.ttf
+          weight: 700

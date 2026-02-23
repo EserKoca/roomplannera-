@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:pub.dev)",
+      "Bash(\"/Users/eser/Desktop/roomplanneraı/lib/core/widgets/scaffold_with_nav_bar.dart\" << 'DARTEOF'\nimport 'dart:ui';\nimport 'package:flutter/material.dart';\nimport 'package:go_router/go_router.dart';\nimport '../constants/app_colors.dart';\nimport '../constants/app_spacing.dart';\n\nclass ScaffoldWithNavBar extends StatelessWidget {\n  final StatefulNavigationShell child;\n\n  const ScaffoldWithNavBar\\({\n    super.key,\n    required this.child,\n  }\\);\n\n  @override\n  Widget build\\(BuildContext context\\) {\n    return Scaffold\\(\n      backgroundColor: AppColors.bgPrimary,\n      body: child,\n      bottomNavigationBar: ClipRRect\\(\n        child: BackdropFilter\\(\n          filter: ImageFilter.blur\\(sigmaX: 10, sigmaY: 10\\),\n          child: BottomNavigationBar\\(\n            currentIndex: child.currentIndex,\n            onTap: \\(index\\) => child.goBranch\\(index\\),\n            type: BottomNavigationBarType.fixed,\n            backgroundColor: AppColors.bgPrimary.withOpacity\\(0.85\\),\n            selectedItemColor: AppColors.primary,\n            unselectedItemColor: AppColors.textTertiary,\n            selectedFontSize: 12,\n            unselectedFontSize: 12,\n            items: const [\n              BottomNavigationBarItem\\(\n                icon: Icon\\(Icons.home_rounded\\),\n                label: 'Home',\n              \\),\n              BottomNavigationBarItem\\(\n                icon: Icon\\(Icons.photo_library_rounded\\),\n                label: 'Gallery',\n              \\),\n              BottomNavigationBarItem\\(\n                icon: Icon\\(Icons.settings_rounded\\),\n                label: 'Settings',\n              \\),\n            ],\n          \\),\n        \\),\n      \\),\n    \\);\n  }\n}\nDARTEOF)",
+      "Bash(flutter analyze:*)",
+      "Bash(dart analyze:*)",
+      "Bash(flutter pub get:*)"
+    ]
+  }
+}
