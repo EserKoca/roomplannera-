@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 import '../services/openai_service.dart';
+import '../services/demo_image_generator.dart';
 import '../models/design_style.dart';
 import '../models/room_type.dart';
 import '../../../../core/network/api_client.dart';
@@ -22,6 +23,7 @@ class DesignResult {
   final String? customPrompt;
   final bool isFavorite;
   final DateTime createdAt;
+  final bool isDemo;
 
   DesignResult({
     required this.id,
@@ -34,6 +36,7 @@ class DesignResult {
     this.customPrompt,
     this.isFavorite = false,
     required this.createdAt,
+    this.isDemo = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +50,7 @@ class DesignResult {
     'customPrompt': customPrompt,
     'isFavorite': isFavorite,
     'createdAt': createdAt.toIso8601String(),
+    'isDemo': isDemo,
   };
 
   factory DesignResult.fromJson(Map<String, dynamic> json) => DesignResult(
@@ -60,6 +64,7 @@ class DesignResult {
     customPrompt: json['customPrompt'] as String?,
     isFavorite: json['isFavorite'] as bool? ?? false,
     createdAt: DateTime.parse(json['createdAt'] as String),
+    isDemo: json['isDemo'] as bool? ?? false,
   );
 
   DesignResult copyWith({bool? isFavorite}) => DesignResult(
@@ -73,6 +78,7 @@ class DesignResult {
     customPrompt: customPrompt,
     isFavorite: isFavorite ?? this.isFavorite,
     createdAt: createdAt,
+    isDemo: isDemo,
   );
 }
 
@@ -90,8 +96,150 @@ class DesignRepository {
 
   DesignRepository(this._openAIService, this._designsBox, this._settingsBox);
 
+  /// Check if a valid API key exists
+  bool get hasApiKey {
+    final key = _settingsBox.get('openai_api_key', defaultValue: '') as String;
+    return key.isNotEmpty && key.startsWith('sk-');
+  }
+
+  /// Check if demo mode is active (no API key)
+  bool get isDemoMode => !hasApiKey;
+
   // ── Stream-based generation with progress ────────────────────────────
   Stream<GenerationProgress> createDesignWithProgress({
+    required String imagePath,
+    required DesignStyle style,
+    required RoomType roomType,
+    String? customPrompt,
+    bool isGarden = false,
+  }) async* {
+    // Route to demo or real generation based on API key
+    if (isDemoMode) {
+      yield* _createDemoDesign(
+        imagePath: imagePath,
+        style: style,
+        roomType: roomType,
+        customPrompt: customPrompt,
+      );
+    } else {
+      yield* _createRealDesign(
+        imagePath: imagePath,
+        style: style,
+        roomType: roomType,
+        customPrompt: customPrompt,
+        isGarden: isGarden,
+      );
+    }
+  }
+
+  // ── Demo Generation (No API Key Required) ──────────────────────────
+  Stream<GenerationProgress> _createDemoDesign({
+    required String imagePath,
+    required DesignStyle style,
+    required RoomType roomType,
+    String? customPrompt,
+  }) async* {
+    _isCancelled = false;
+    _lastResult = null;
+
+    try {
+      // Stage 1: Analyzing (simulated)
+      yield const GenerationProgress(
+        stage: GenerationStage.analyzing,
+        progress: 0.05,
+      );
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (_isCancelled) return;
+
+      yield const GenerationProgress(
+        stage: GenerationStage.analyzing,
+        progress: 0.25,
+      );
+      await Future.delayed(const Duration(milliseconds: 600));
+      if (_isCancelled) return;
+
+      // Stage 2: Generating (create local demo image)
+      yield const GenerationProgress(
+        stage: GenerationStage.generating,
+        progress: 0.33,
+      );
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (_isCancelled) return;
+
+      final id = _uuid.v4();
+
+      yield const GenerationProgress(
+        stage: GenerationStage.generating,
+        progress: 0.55,
+      );
+
+      // Generate the demo image locally
+      final localPath = await DemoImageGenerator.generateDemoImage(
+        styleId: style.id,
+        styleName: style.name,
+        roomTypeName: roomType.name,
+        designId: id,
+      );
+
+      yield const GenerationProgress(
+        stage: GenerationStage.generating,
+        progress: 0.65,
+      );
+      await Future.delayed(const Duration(milliseconds: 400));
+      if (_isCancelled) return;
+
+      // Stage 3: Downloading (simulated)
+      yield const GenerationProgress(
+        stage: GenerationStage.downloading,
+        progress: 0.75,
+      );
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      yield const GenerationProgress(
+        stage: GenerationStage.downloading,
+        progress: 0.90,
+      );
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (_isCancelled) return;
+
+      // Stage 4: Saving
+      yield const GenerationProgress(
+        stage: GenerationStage.saving,
+        progress: 0.93,
+      );
+
+      final result = DesignResult(
+        id: id,
+        originalImagePath: imagePath,
+        generatedImagePath: localPath,
+        styleId: style.id,
+        styleName: style.name,
+        roomTypeId: roomType.id,
+        roomTypeName: roomType.name,
+        customPrompt: customPrompt,
+        createdAt: DateTime.now(),
+        isDemo: true,
+      );
+
+      await _designsBox.put(id, result.toJson());
+      _incrementDesignCount();
+      _lastResult = result;
+
+      yield const GenerationProgress(
+        stage: GenerationStage.complete,
+        progress: 1.0,
+      );
+    } catch (e) {
+      yield GenerationProgress(
+        stage: GenerationStage.error,
+        errorMessage: 'Demo generation failed: $e',
+        canRetry: true,
+      );
+    }
+  }
+
+  // ── Real Generation (With API Key) ─────────────────────────────────
+  Stream<GenerationProgress> _createRealDesign({
     required String imagePath,
     required DesignStyle style,
     required RoomType roomType,
@@ -114,7 +262,6 @@ class DesignRepository {
       try {
         analysis = await _openAIService.analyzeRoom(File(imagePath));
       } catch (e) {
-        // Non-fatal: continue without analysis if it fails
         analysis = null;
       }
 
@@ -181,6 +328,7 @@ class DesignRepository {
         roomTypeName: roomType.name,
         customPrompt: customPrompt,
         createdAt: DateTime.now(),
+        isDemo: false,
       );
 
       await _designsBox.put(id, result.toJson());
@@ -265,6 +413,8 @@ class DesignRepository {
     final isPremium =
         _settingsBox.get('is_premium', defaultValue: false) as bool;
     if (isPremium) return true;
+    // Demo mode has unlimited designs
+    if (isDemoMode) return true;
     return getDesignCount() < ApiConstants.maxFreeDesigns;
   }
 
@@ -272,6 +422,7 @@ class DesignRepository {
     final isPremium =
         _settingsBox.get('is_premium', defaultValue: false) as bool;
     if (isPremium) return -1; // unlimited
+    if (isDemoMode) return -1; // unlimited in demo
     return ApiConstants.maxFreeDesigns - getDesignCount();
   }
 
@@ -315,7 +466,6 @@ class DesignRepository {
   }
 
   Future<void> clearAll() async {
-    // Delete all local image files
     for (final entry in _designsBox.values) {
       try {
         final result =

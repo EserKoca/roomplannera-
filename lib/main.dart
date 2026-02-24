@@ -14,12 +14,12 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Set system UI overlay style for premium dark look
+  // Set system UI overlay style for light theme
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: Color(0xFF0D0D0D),
-    systemNavigationBarIconBrightness: Brightness.light,
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: Color(0xFFFCFAF7),
+    systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
   // Initialize Hive

@@ -148,15 +148,42 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      remaining < 0
-                          ? 'Unlimited designs'
-                          : l10n.designsRemaining(remaining),
-                      style: AppTypography.bodySmall.copyWith(
-                        color: remaining == 0
-                            ? AppColors.error
-                            : AppColors.textTertiary,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          remaining < 0
+                              ? (repository.isDemoMode
+                                  ? 'Demo mode • Unlimited designs'
+                                  : 'Unlimited designs')
+                              : l10n.designsRemaining(remaining),
+                          style: AppTypography.bodySmall.copyWith(
+                            color: remaining == 0
+                                ? AppColors.error
+                                : AppColors.textTertiary,
+                          ),
+                        ),
+                        if (repository.isDemoMode) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.energyYellow.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                            ),
+                            child: Text(
+                              'DEMO',
+                              style: AppTypography.labelMedium.copyWith(
+                                color: AppColors.energyYellow,
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ],
                 ),
