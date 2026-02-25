@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:room_ai/l10n/app_localizations.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_typography.dart';
@@ -93,20 +93,6 @@ class _StyleSelectionScreenState extends ConsumerState<StyleSelectionScreen> {
 
                 return GestureDetector(
                   onTap: () {
-                    if (style.isPremium) {
-                      // TODO: Check if user is pro
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(l10n.upgradeToUnlock),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusMd),
-                          ),
-                        ),
-                      );
-                      return;
-                    }
                     setState(() {
                       _selectedStyleId = style.id;
                     });
@@ -183,32 +169,6 @@ class _StyleSelectionScreenState extends ConsumerState<StyleSelectionScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-
-                          // PRO badge
-                          if (style.isPremium)
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  gradient: AppColors.goldGradient,
-                                  borderRadius: BorderRadius.circular(
-                                      AppSpacing.radiusSm),
-                                ),
-                                child: Text(
-                                  l10n.proStyle,
-                                  style: AppTypography.labelMedium.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
 
                           // Selected checkmark
                           if (isSelected)

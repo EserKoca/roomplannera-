@@ -31,6 +31,18 @@ class ApiClient {
     }
   }
 
+  Future<Response> postMultipart(String path, {required FormData formData}) async {
+    try {
+      return await _dio.post(
+        path,
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
   Future<void> downloadFile(String url, String savePath) async {
     try {
       await _downloadDio.download(url, savePath);

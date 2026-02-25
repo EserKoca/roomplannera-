@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_exceptions.dart';
@@ -43,7 +44,6 @@ class OpenAIService {
     } on AuthException {
       return false;
     } catch (_) {
-      // Network or other errors - key might be valid but can't verify
       rethrow;
     }
   }
@@ -65,25 +65,27 @@ class OpenAIService {
                 {
                   'type': 'text',
                   'text':
-                      'Analyze this room photo concisely. Provide:\n'
-                      '1. Room type (e.g., living room, bedroom)\n'
-                      '2. Current style\n'
-                      '3. Estimated dimensions\n'
-                      '4. Key furniture and elements present\n'
-                      '5. Lighting conditions\n'
-                      'Be brief and factual.',
+                      'Analyze this room photo in detail. Describe:\n'
+                      '1. Room type (living room, bedroom, kitchen, etc.)\n'
+                      '2. Current furniture and their positions\n'
+                      '3. Wall colors and materials\n'
+                      '4. Flooring type\n'
+                      '5. Lighting (natural/artificial, direction)\n'
+                      '6. Room dimensions estimate\n'
+                      '7. Notable architectural features (windows, doors, ceiling height)\n'
+                      'Be specific and descriptive for use in interior design generation.',
                 },
                 {
                   'type': 'image_url',
                   'image_url': {
                     'url': 'data:image/jpeg;base64,$base64Image',
-                    'detail': 'low',
+                    'detail': 'high',
                   },
                 },
               ],
             },
           ],
-          'max_tokens': 300,
+          'max_tokens': 500,
         },
       );
 
@@ -99,39 +101,168 @@ class OpenAIService {
     });
   }
 
-  // ── Design Generation with DALL-E 3 ────────────────────────────────────
+  // ── Design Generation: tries GPT-4o image gen first, falls back to DALL-E 3
   Future<String> generateDesign({
     RoomAnalysis? analysis,
     required String styleKeyword,
     required String roomTypeKeyword,
     String? customPrompt,
     bool isGarden = false,
+    File? sourceImage,
   }) async {
     return _retryWithBackoff(() async {
-      final prompt = _buildPrompt(
+      if (sourceImage != null) {
+        try {
+          return await _generateWithImageReference(
+            sourceImage: sourceImage,
+            analysis: analysis,
+            styleKeyword: styleKeyword,
+            roomTypeKeyword: roomTypeKeyword,
+            customPrompt: customPrompt,
+            isGarden: isGarden,
+          );
+        } catch (e) {
+          // If gpt-image-1 fails (e.g. not available on this key tier),
+          // fall through to DALL-E 3 with analysis context
+        }
+      }
+
+      return await _generateWithDalle3(
         analysis: analysis,
         styleKeyword: styleKeyword,
         roomTypeKeyword: roomTypeKeyword,
         customPrompt: customPrompt,
         isGarden: isGarden,
       );
-
-      final response = await _apiClient.post(
-        ApiConstants.imageGenerationEndpoint,
-        data: {
-          'model': ApiConstants.dalle3Model,
-          'prompt': prompt,
-          'n': 1,
-          'size': '1024x1024',
-          'quality': 'hd',
-        },
-      );
-
-      return response.data['data'][0]['url'] as String;
     });
   }
 
-  // ── Professional Prompt Engineering ─────────────────────────────────────
+  // ── GPT-image-1 (photo edit via /images/edits multipart) ────────────────
+  Future<String> _generateWithImageReference({
+    required File sourceImage,
+    RoomAnalysis? analysis,
+    required String styleKeyword,
+    required String roomTypeKeyword,
+    String? customPrompt,
+    bool isGarden = false,
+  }) async {
+    final prompt = _buildTransformPrompt(
+      analysis: analysis,
+      styleKeyword: styleKeyword,
+      roomTypeKeyword: roomTypeKeyword,
+      customPrompt: customPrompt,
+      isGarden: isGarden,
+    );
+
+    final formData = FormData.fromMap({
+      'model': 'gpt-image-1',
+      'prompt': prompt,
+      'n': '1',
+      'size': '1024x1024',
+      'image': await MultipartFile.fromFile(
+        sourceImage.path,
+        filename: 'room.jpg',
+      ),
+    });
+
+    final response = await _apiClient.postMultipart(
+      ApiConstants.imageEditsEndpoint,
+      formData: formData,
+    );
+
+    // gpt-image-1 returns base64
+    final b64 = response.data['data'][0]['b64_json'] as String?;
+    if (b64 != null) {
+      return await _saveBase64Image(b64);
+    }
+
+    return response.data['data'][0]['url'] as String;
+  }
+
+  // ── DALL-E 3 text-only fallback ──────────────────────────────────────────
+  Future<String> _generateWithDalle3({
+    RoomAnalysis? analysis,
+    required String styleKeyword,
+    required String roomTypeKeyword,
+    String? customPrompt,
+    bool isGarden = false,
+  }) async {
+    final prompt = _buildPrompt(
+      analysis: analysis,
+      styleKeyword: styleKeyword,
+      roomTypeKeyword: roomTypeKeyword,
+      customPrompt: customPrompt,
+      isGarden: isGarden,
+    );
+
+    final response = await _apiClient.post(
+      ApiConstants.imageGenerationEndpoint,
+      data: {
+        'model': ApiConstants.dalle3Model,
+        'prompt': prompt,
+        'n': 1,
+        'size': '1024x1024',
+        'quality': 'hd',
+      },
+    );
+
+    return response.data['data'][0]['url'] as String;
+  }
+
+  // ── Prompt: photo-based transformation ──────────────────────────────────
+  String _buildTransformPrompt({
+    RoomAnalysis? analysis,
+    required String styleKeyword,
+    required String roomTypeKeyword,
+    String? customPrompt,
+    bool isGarden = false,
+  }) {
+    final buffer = StringBuffer();
+
+    if (isGarden) {
+      buffer.write(
+        'Transform this outdoor space into a professionally designed garden '
+        'in $styleKeyword style. '
+        'Keep the exact same camera angle, perspective, and spatial layout. '
+        'Preserve the boundaries and structural elements of the space. ',
+      );
+    } else {
+      buffer.write(
+        'Redesign this exact room in $styleKeyword interior design style. '
+        'Keep the same room layout, camera angle, perspective, wall positions, '
+        'windows, doors, and ceiling height. '
+        'Replace the furniture, decor, colors, and materials to match '
+        '$styleKeyword style while preserving the room\'s architecture. ',
+      );
+    }
+
+    if (analysis != null && analysis.existingFeatures.isNotEmpty) {
+      buffer.write(
+        'The room currently has: ${analysis.existingFeatures}. '
+        'Transform these elements to fit the new style. ',
+      );
+    }
+
+    final styleDetails = _stylePromptMap[styleKeyword.toLowerCase()];
+    if (styleDetails != null) {
+      buffer.write('$styleDetails ');
+    }
+
+    if (customPrompt != null && customPrompt.isNotEmpty) {
+      buffer.write('Additional requirements: $customPrompt. ');
+    }
+
+    buffer.write(
+      'Ultra-realistic result, photorealistic rendering, '
+      'professional interior photography quality, '
+      'natural lighting consistent with the original photo, '
+      'high detail, 4K quality.',
+    );
+
+    return buffer.toString();
+  }
+
+  // ── Prompt: DALL-E 3 text-only (with analysis context) ──────────────────
   String _buildPrompt({
     RoomAnalysis? analysis,
     required String styleKeyword,
@@ -148,29 +279,27 @@ class OpenAIService {
       );
       if (analysis != null) {
         buffer.write(
-          'Current outdoor features: ${analysis.existingFeatures}. '
-          'Maintain the property boundaries while transforming the landscape design. ',
+          'Based on this space: ${analysis.existingFeatures}. '
+          'Maintain the property boundaries while transforming the landscape. ',
         );
       }
       buffer.write(
         'Lush vegetation, professional landscaping, golden hour lighting, '
-        'architectural digest quality, beautifully maintained garden paths, '
-        'outdoor furniture arrangement. ',
+        'architectural digest quality. ',
       );
     } else {
       buffer.write(
         'Professional interior design photograph of a $roomTypeKeyword '
-        'redesigned in $styleKeyword style. ',
+        'completely redesigned in $styleKeyword style. ',
       );
       if (analysis != null) {
         buffer.write(
-          'Current room features: ${analysis.existingFeatures}. '
+          'Room details: ${analysis.existingFeatures}. '
           'Maintain the room layout and dimensions while transforming the aesthetic. ',
         );
       }
     }
 
-    // Per-style enhancements
     final styleDetails = _stylePromptMap[styleKeyword.toLowerCase()];
     if (styleDetails != null) {
       buffer.write('$styleDetails ');
@@ -224,8 +353,20 @@ class OpenAIService {
         'mason jar accents, gingham patterns, vintage charm.',
   };
 
+  // ── Save base64 image to local file ─────────────────────────────────────
+  Future<String> _saveBase64Image(String base64Data) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final filename = 'generated_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final filePath = '${dir.path}/$filename';
+    final bytes = base64Decode(base64Data);
+    await File(filePath).writeAsBytes(bytes);
+    return filePath;
+  }
+
   // ── Image Download ──────────────────────────────────────────────────────
   Future<String> downloadImage(String url, String filename) async {
+    // Already a local path (base64 was saved directly)
+    if (!url.startsWith('http')) return url;
     final dir = await getApplicationDocumentsDirectory();
     final filePath = '${dir.path}/$filename';
     await _apiClient.downloadFile(url, filePath);
@@ -242,11 +383,11 @@ class OpenAIService {
       try {
         return await action();
       } on AuthException {
-        rethrow; // No point retrying a bad key
+        rethrow;
       } on RateLimitException {
         attempt++;
         if (attempt >= maxRetries) rethrow;
-        await Future.delayed(Duration(seconds: 1 << attempt)); // 2s, 4s, 8s
+        await Future.delayed(Duration(seconds: 1 << attempt));
       } on ServerException {
         attempt++;
         if (attempt >= maxRetries) rethrow;

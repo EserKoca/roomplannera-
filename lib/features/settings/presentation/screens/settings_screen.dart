@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:room_ai/core/constants/app_colors.dart';
 import 'package:room_ai/core/constants/app_typography.dart';
 import 'package:room_ai/core/constants/app_spacing.dart';
 import 'package:room_ai/core/constants/api_constants.dart';
-import 'package:room_ai/core/router/app_router.dart';
 import 'package:room_ai/core/widgets/glass_card.dart';
 import 'package:room_ai/core/widgets/gradient_button.dart';
 import 'package:room_ai/features/design/data/repositories/design_repository.dart';
@@ -91,23 +89,9 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        if (!isPremium) ...[
-                          const SizedBox(height: AppSpacing.md),
-                          GradientButton(
-                            text: 'Upgrade to Pro',
-                            height: AppSpacing.buttonHeightSmall,
-                            onPressed: () => context.push(RoutePaths.paywall),
-                          ),
-                        ],
                       ],
                     ),
                   ),
-
-                  // ── Mode Status ──
-                  const SizedBox(height: AppSpacing.lg),
-                  const _SectionLabel(label: 'Generation Mode'),
-                  const SizedBox(height: AppSpacing.sm),
-                  _ModeStatusCard(isDemoMode: repository.isDemoMode),
 
                   // ── API Key Section ──
                   const SizedBox(height: AppSpacing.lg),
@@ -662,117 +646,6 @@ class _ApiKeySectionState extends ConsumerState<_ApiKeySection> {
 }
 
 enum _ValidationState { none, valid, invalid, networkError }
-
-// ── Mode Status Card ──
-class _ModeStatusCard extends StatelessWidget {
-  final bool isDemoMode;
-  const _ModeStatusCard({required this.isDemoMode});
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: isDemoMode
-                      ? AppColors.energyYellow.withValues(alpha: 0.15)
-                      : AppColors.success.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                ),
-                child: Icon(
-                  isDemoMode ? Icons.science_rounded : Icons.bolt_rounded,
-                  size: 20,
-                  color: isDemoMode ? AppColors.energyYellow : AppColors.success,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      isDemoMode ? 'Demo Mode' : 'Live Mode',
-                      style: AppTypography.labelLarge.copyWith(
-                        color: isDemoMode
-                            ? AppColors.energyYellow
-                            : AppColors.success,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      isDemoMode
-                          ? 'Generating sample designs locally'
-                          : 'Connected to OpenAI for real designs',
-                      style: AppTypography.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                decoration: BoxDecoration(
-                  color: isDemoMode
-                      ? AppColors.energyYellow.withValues(alpha: 0.2)
-                      : AppColors.success.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                ),
-                child: Text(
-                  isDemoMode ? 'DEMO' : 'LIVE',
-                  style: AppTypography.labelMedium.copyWith(
-                    color: isDemoMode
-                        ? AppColors.energyYellow
-                        : AppColors.success,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          if (isDemoMode) ...[
-            const SizedBox(height: AppSpacing.md),
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              decoration: BoxDecoration(
-                color: AppColors.bgTertiary,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.info_outline_rounded,
-                    size: 16,
-                    color: AppColors.textTertiary,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      'Add your OpenAI API key below to unlock AI-powered room designs',
-                      style: AppTypography.bodySmall.copyWith(
-                        color: AppColors.textTertiary,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
 
 // ── Language Toggle ──
 class _LanguageToggle extends StatefulWidget {

@@ -70,3 +70,6 @@ app.*.map.json
 
 # Local configuration files
 *.local.json
+
+# Environment variables (contains API keys)
+.env

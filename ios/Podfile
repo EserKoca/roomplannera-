@@ -44,4 +44,32 @@ post_install do |installer|
       config.build_settings['SWIFT_VERSION'] = '5.0'
     end
   end
+
+  # Patch Pods-Runner-frameworks.sh to clear iCloud xattrs before codesign
+  # This fixes "resource fork, Finder information detritus not allowed" on iCloud Desktop
+  frameworks_script = File.join(installer.sandbox.root,
+    'Target Support Files', 'Pods-Runner', 'Pods-Runner-frameworks.sh')
+
+  if File.exist?(frameworks_script)
+    content = File.read(frameworks_script)
+    xattr_fix = <<~'SHELL'
+      # Clear iCloud extended attributes that break codesign (added when project is on iCloud Desktop)
+      clear_icloud_xattrs() {
+        xattr -rd com.apple.FinderInfo "$1" 2>/dev/null || true
+        xattr -rd "com.apple.fileprovider.fpfs#P" "$1" 2>/dev/null || true
+      }
+    SHELL
+
+    unless content.include?('clear_icloud_xattrs')
+      # Insert after the set -o pipefail line
+      content = content.sub("set -o pipefail\n", "set -o pipefail\n\n#{xattr_fix}")
+      # Call it inside install_framework before code_sign_if_enabled
+      content = content.sub(
+        "  # Resign the code if required by the build settings to avoid unstable apps\n  code_sign_if_enabled",
+        "  # Clear iCloud xattrs before signing\n  clear_icloud_xattrs \"${destination}/$(basename \"$1\")\"\n\n  # Resign the code if required by the build settings to avoid unstable apps\n  code_sign_if_enabled"
+      )
+      File.write(frameworks_script, content)
+      puts "✓ Patched Pods-Runner-frameworks.sh with iCloud xattr fix"
+    end
+  end
 end

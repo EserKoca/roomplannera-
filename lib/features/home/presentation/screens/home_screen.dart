@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:room_ai/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,13 +22,8 @@ class HomeScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final repository = ref.watch(designRepositoryProvider);
     final remaining = repository.getRemainingDesigns();
-    final canGenerate = repository.canGenerateDesign();
 
     void startDesignFlow(String category) {
-      if (!canGenerate) {
-        context.push(RoutePaths.paywall);
-        return;
-      }
       ref.read(designFlowProvider.notifier).reset();
       ref.read(designFlowProvider.notifier).setCategory(category);
       context.push(RoutePaths.styleSelection);
@@ -83,47 +78,6 @@ class HomeScreen extends ConsumerWidget {
                       ],
                     ),
                     const Spacer(),
-                    // Pro badge with gradient
-                    GestureDetector(
-                      onTap: () => context.push(RoutePaths.paywall),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: AppColors.premiumGradient,
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusFull),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.primary.withValues(alpha: 0.2),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.workspace_premium_rounded,
-                              size: 14,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'PRO',
-                              style: AppTypography.labelMedium.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               )
@@ -148,42 +102,15 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Text(
-                          remaining < 0
-                              ? (repository.isDemoMode
-                                  ? 'Demo mode • Unlimited designs'
-                                  : 'Unlimited designs')
-                              : l10n.designsRemaining(remaining),
-                          style: AppTypography.bodySmall.copyWith(
-                            color: remaining == 0
-                                ? AppColors.error
-                                : AppColors.textTertiary,
-                          ),
-                        ),
-                        if (repository.isDemoMode) ...[
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.energyYellow.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                            ),
-                            child: Text(
-                              'DEMO',
-                              style: AppTypography.labelMedium.copyWith(
-                                color: AppColors.energyYellow,
-                                fontSize: 9,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
+                    Text(
+                      remaining < 0
+                          ? 'Unlimited designs'
+                          : l10n.designsRemaining(remaining),
+                      style: AppTypography.bodySmall.copyWith(
+                        color: remaining == 0
+                            ? AppColors.error
+                            : AppColors.textTertiary,
+                      ),
                     ),
                   ],
                 ),
